@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+	<!-- com.exam.ex.MyApp 클래스의 객체를 생성하여, "ma"라는 이름으로 스프링에 등록 -->
+	<!-- <bean id="ma" class="com.exam.ex.MyApp">  -->
+		<!-- myService 속성의 값으로 스프링에 "msk"라는 이름으로 등록된 객체를 저장(주입) -->
+		<!-- <property name="myService" ref="mse"></property> --> <!-- spring에 등록 이미 되있으면 ref, 직접 입력해야 되면 value, value="msk"라고 하면 msk라는 문자열을 입력하는것... -->
+	<!-- </bean> -->	<!-- id 혹은 name 속성을 사용할 수 있음 -->	
+	<!-- com.exam.ex.MyServiceKo 클래스의 객체를 생성하여, "msk"라는 이름으로 스프링에 등록 -->
+	<!-- <bean id="msk" class="com.exam.ex.MyServiceKo" />  -->
+	<!-- com.exam.ex.MyServiceEn 클래스의 객체를 생성하여, "mse"라는 이름으로 스프링에 등록 -->
+	<!-- <bean id="mse" class="com.exam.ex.MyServiceEn" />  -->
+	
+	<!-- "com.exam.ex" 하위에 있는 모든 클래스들 중
+	@Conponent, @Controller, @Service, @Repository(DAO), @Configuration(설정) 
+	등이 붙어있는 클래스들을 자동으로 스프링에 등록 --> 
+	<context:component-scan base-package="com.exam.ex" />
+	
+	<!-- advice: 끼워넣을 코드 -->
+<!-- 	<bean id="adv" class="com.exam.ex.MyAdvice" /> -->
+<!-- 		<aop:config>  -->
+			<!-- pointcut : 코드를 끼워넣을 지점 -->
+			<!-- 포인트컷 표현식 : execution( 반환타입 패키지.클래스명.메서드명(파라미터타입,) ) -->
+			<!-- <aop:pointcut id="tm" expression="execution(* com.exam.ex.My*.*(..))" /> -->
+			 <!-- (..) -> 갯수랑 이름은 상관 없다는 뜻 -->
+<!-- before : 실행되기 전에 끼워넣음
+	after : 끝나면 끼워넣음
+	around : 실행하기 전과 끝에 끼워넣음 -->		
+			<!--  aspect : 어떤 advice를 어떤 pointcut에 끼워넣을지 설정 -->			
+			<!--  <aop:aspect ref="adv"> -->
+			<!-- 스프링에 adv라는 이름으로 등록된 객체의 beforeTargetMethod 메서드를 
+			tm이라는 이름으로 등록된 포인트컷 실행 전에 끼워넣도록 설정 -->
+        		<!-- <aop:before pointcut-ref="tm" method="beforeTargetMethod" />
+			</aop:aspect>
+		</aop:config> -->
+	<!-- @Aspect 같은 애노테이션을 이용한 AOP 설정 기능 활성화 -->
+	<aop:aspectj-autoproxy />
+ </beans>
+
+

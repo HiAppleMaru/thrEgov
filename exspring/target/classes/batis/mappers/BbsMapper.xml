@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.exam.myapp.bbs.BbsDao">
+	<resultMap type="BbsVo" id="BbsMap">
+		<id property="bbsNo" column="bbs_no" /> <!-- 글번호가 기본키니까 id로 지정 -->
+		<result property="bbsTitle" column="bbs_title" />
+		<result property="bbsContent" column="bbs_content" />
+		<result property="bbsWriter" column="bbs_writer" />
+		<result property="bbsRegDate" column="bbs_reg_date" />
+		<result property="bbsCount" column="bbs_count" />
+		<!-- JOIN 조회결과를 담기위한 resultMap 설정 -->
+		<!-- 1:1관계면 association, 1:다 관계면 collection 앨리먼트를 사용 -->
+<!-- 		<collection property="attachList" ofType="AttachVo">
+			<id property="attNo" column="att_no" />
+			<result property="attOrgName" column="att_org_name" />
+			<result property="attNewName" column="att_new_name" />
+			<result property="attBbsNo" column="att_bbs_no" />
+		</collection> -->
+		
+		<!-- bbs_no 컬럼값을 파라미터로 전달하면서, com.exam.myapp.bbs.AttachDao에 있는 
+		이름이 s0electAttachList SQL문을 실행하고, 그 결과를 attachList에 속성값으로 저장 -->
+		<collection property="attachList" ofType="AttachVo" column="bbs_no"
+		select="com.exam.myapp.bbs.AttachDao.selectAttachList" />
+		
+		<!-- 줘야되는 값은 column값으로 설정 -->
+	</resultMap>
+	
+	<!-- 검색부분 중복이 많아서 따로 묶는거 -->
+	<sql id="searchCondition">
+  	<!-- trin 태그 내부에 내용이 있을 경우에만, 내용 앞에 prefix 속성값을 추가 -->
+  	<!-- prefixOverrides ->내용 시작에 "무언가"가 있으면 없애줌. -->
+  	<!-- suffixOverrides ->내용 끝에 "무언가"가 있으면 없애줌. -->
+  	<!-- 내용의 시작 부분이 prefixOverrides 속성값인 경우 그 부분을 내용에서 제거 -->
+  	<trim prefix="WHERE" prefixOverrides="AND |OR " >
+  	<if test="(searchType == 'title' or searchType=='total') and searchWord != null and searchWord != ''">
+  		bbs_title like '%' || #{searchWord} || '%'  	
+  	</if>
+  	<if test="(searchType == 'content' or searchType=='total') and searchWord != null and searchWord != ''">
+  		or bbs_content like '%' || #{searchWord} || '%'  	
+  	</if>
+  	</trim>	
+	</sql>
+
+    <select id="selectBbsList" resultType="BbsVo"> 
+    select rnum, bbs_no, bbs_title, bbs_writer, bbs_reg_date, bbs_count 
+	from (
+		select rownum as rnum, bbs_no, bbs_title, bbs_writer, bbs_reg_date, bbs_count 
+		from (
+				SELECT bbs_no, bbs_title, bbs_writer, bbs_reg_date, bbs_count
+  				FROM bbs
+  				<include refid="searchCondition"></include>
+  				ORDER BY bbs_no desc
+  				)
+		<![CDATA[where rownum <= #{lastRecordIndex} ]]> 
+		) 
+	<![CDATA[where rnum > #{firstRecordIndex} ]]>
+  </select>
+  
+    <select id="selectBbsCount" resultType="int"> 
+	SELECT count(*)
+  	FROM bbs
+   	<include refid="searchCondition"></include>
+  </select>
+  
+    <select id="selectBbs" resultMap="BbsMap"> 
+<!--     SELECT bbs_no, bbs_title, bbs_content, bbs_writer, bbs_reg_date,
+	  	bbs_count, att_no, att_org_name, att_new_name, att_bbs_no
+	FROM ( 
+		SELECT bbs_no, bbs_title, bbs_content, bbs_writer, bbs_reg_date, bbs_count
+		FROM bbs 
+		WHERE bbs_no = #{bbsNo}
+	)  
+	left outer join attach on bbs_no = att_bbs_no -->
+	<!-- 이러면 약간의 성능향상 -->
+		
+	SELECT bbs_no, bbs_title, bbs_content, bbs_writer, bbs_reg_date, bbs_count
+		FROM bbs 
+		WHERE bbs_no = #{bbsNo}
+
+  </select>
+  
+  <insert id="insertBbs" >
+  	<selectKey keyProperty="bbsNo" resultType="int" order="BEFORE" >
+  	<!-- 실행하기 전후에 키값을 얻어낼 수 있는 태그  -->
+  		SELECT bbs_seq.NEXTVAL FROM DUAL <!-- sql로 이걸 실행함으로 인해서 nextseq. 발동됨 -->
+  	</selectKey> 
+    insert into bbs ( BBS_NO, BBS_TITLE, BBS_CONTENT, BBS_WRITER ) 
+	values ( #{bbsNo}, #{bbsTitle}, #{bbsContent}, #{bbsWriter} )
+  </insert>
+
+  <delete id="deleteBbs">
+    delete from bbs where bbs_no = #{bbsNo}
+  </delete>
+  
+   <update id="updateBbs">
+   UPDATE bbs 
+   set BBS_TITLE = #{bbsTitle}, BBS_CONTENT =  #{bbsContent}
+   WHERE BBS_NO = #{bbsNo}
+   </update>   
+   
+   
+</mapper>
+

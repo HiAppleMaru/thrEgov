@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exam.myapp.bbs.AttachDao">
+
+    <select id="selectAttachList" resultType="AttachVo"> 
+	SELECT att_no, att_org_name, att_new_name, att_bbs_no
+	FROM attach
+  	WHERE att_bbs_no = #{attBbsNo}
+  </select>
+  
+    <select id="selectAttach" resultType="AttachVo"> 
+    SELECT att_no, att_org_name, att_new_name, att_bbs_no
+	FROM attach
+  	WHERE att_no = #{attNo}
+  </select>
+  
+  <insert id="insertAttach"> 
+    insert into attach (ATT_NO, ATT_ORG_NAME, ATT_NEW_NAME, ATT_BBS_NO ) 
+	values ( att_seq.NEXTVAL, #{attOrgName}, #{attNewName}, #{attBbsNo} )
+  </insert>
+
+  <delete id="deleteAttach">
+    delete from attach where att_no = #{attNo}
+  </delete>
+   
+</mapper>
+

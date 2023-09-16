@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	<!-- name 속성에 지정한 이름의 화면을 정의 -->
+	<!-- template 속성에 지정한 JSP 파일(내부의 attribute 위치)에 -->
+	<!-- put-attribute 태그로 지정한 내용을 주입하여 화면을 구성 -->
+<!--  <put-attribute name="header" value="/tiles/banner.jsp" /> 우리는 이거 안넣었음. -->
+	<definition name="base" template="/WEB-INF/views/comm/layout.jsp">
+	    <put-attribute name="title" value="회원제게시판" />
+	    <put-attribute name="menu" value="/WEB-INF/views/comm/menu.jsp" />
+	    <put-attribute name="footer" value="/WEB-INF/views/comm/foot.jsp" />
+	</definition>
+	
+	<!-- extends 속성에 지정한 화면정의에서 필요한 부분만 변경하여 새로운 화면정의 가능 -->
+	<!-- 화면 이름에 와이드카드(*) 사용 가능 -->
+	<!-- n번째 와이들카드와 매치되는 부분을 {n} 표현으로 attribute value에 주입 가능 -->
+	<definition name="*/*" extends="base">
+	    <put-attribute name="body" value="/WEB-INF/views/{1}/{2}.jsp" />
+	</definition>
+	
+	
+<!-- 	
+	<definition name="member/memList" extends="base">
+	    <put-attribute name="body" value="/WEB-INF/views/member/memList.jsp" />
+	</definition>
+	
+	<definition name="member/memAdd" extends="base">
+	    <put-attribute name="body" value="/WEB-INF/views/member/memAdd.jsp" />
+	</definition>
+
+	<definition name="member/memEdit" extends="base">
+	    <put-attribute name="body" value="/WEB-INF/views/member/memEdit.jsp" />
+	</definition>
+	
+	<definition name="member/login" extends="base">
+	    <put-attribute name="body" value="/WEB-INF/views/member/login.jsp" />
+	</definition> -->
+	
+</tiles-definitions>

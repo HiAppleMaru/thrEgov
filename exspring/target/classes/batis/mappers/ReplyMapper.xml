@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exam.myapp.reply.ReplyDao">
+
+	<select id="selectReplyList" resultType="ReplyVo"> 
+		SELECT REP_NO, REP_CONTENT, REP_WRITER, rep_reg_date, REP_BBS_NO
+		FROM reply
+	  	WHERE rep_bbs_no = #{repBbsNo}
+	  	ORDER BY REP_NO DESC
+  </select>
+
+ <insert id="insertReply"> 
+    insert into reply 
+    (REP_NO, REP_CONTENT, REP_WRITER, REP_BBS_NO) 
+	values (rep_seq.nextval, #{repContent}, #{repWriter}, #{repBbsNo})
+  </insert>
+
+ <delete id="deleteReply">
+  	delete from reply 
+  	where rep_no = #{repNo} and rep_writer = #{repWriter}
+  </delete>
+   
+   
+</mapper>
+

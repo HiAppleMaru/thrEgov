@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+	<!-- 조회결과를 자바객체에 담을때,
+	     밑줄표기법의 컬럼명과 낙타표기법의 자바속성(변수)명을 자동 연결 -->
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+	</settings>
+
+
+	<typeAliases>
+	<!-- 마이바티스 설정파일내에서 com.exam.member.MemberVo를 MemberVo로 대신 사용 가능 -->
+		<typeAlias type="com.exam.myapp.member.MemberVo" alias="MemberVo" />
+		<typeAlias type="com.exam.myapp.bbs.BbsVo" alias="BbsVo" />
+		<typeAlias type="com.exam.myapp.bbs.AttachVo" alias="AttachVo" />
+		<typeAlias type="com.exam.myapp.reply.ReplyVo" alias="ReplyVo" />
+		<!-- 패키지 태그를 사용하면, 지정한 패키지 하위의 모든 클래스들에 대한 별명을 자동 등록 -->
+		<!-- 별명은 패키지명을 제외한 심플클래스 이름으로 설정 -->
+		<!-- <package name="com.exam.myapp" /> -->
+	</typeAliases>
+	
+<!--  실제로 사용할 데이터베이스 정보를 담은 environment의 id를 default 속성값을 지정-->
+<!-- 스프링을 쓸때는 스프링이 DB연동을 하기 때문에 이부분 필요 없음. (그래서 아까 spring 설정에서 설정한거. -->
+<!--  <environments default="development">  --> 
+<!-- 	사용하는 데이터베이스 접속 정보를 environment 태그로 설정   -->
+<!--     개발용, 테스트용, 운영용등 다수의 데이터베이스 정보 설정 가능 -->
+<!-- 	<environment id="development">  -->
+<!--       <transactionManager type="JDBC"/>  -->
+<!--   <dataSource type="POOLED"> --> <!-- connection pooled 접속 통로를 여러개 만들어 놓음.. -->
+<!--         <property name="driver" value="oracle.jdbc.OracleDriver"/>
+        <property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
+        <property name="username" value="web"/>
+        <property name="password" value="web01"/>
+      </dataSource>
+    </environment>
+  </environments>  -->
+<!--  <mappers>   -->
+  <!-- 마이바티스를 통해서 실행할 SQL문들을 담은 XML파일을 등록 -->
+<!--     <mapper resource="batis/mappers/MemberMapper.xml"/>  -->
+  <!-- 보통은 테이블마다 mapper파일을 하나씩 만듬... 만들수록 점점 늘어남; -->
+<!--   </mappers>  -->
+</configuration>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.1" 
+xmlns="http://xmlns.jcp.org/xml/ns/javaee" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+
+	<!-- The definition of the Root Spring Container shared by all Servlets and Filters -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/spring/root-context.xml</param-value>
+	</context-param>
+	
+	<!-- 웹애플리케이션(서버)가 실행되면 최초 1회 실행 -->
+	<!-- WEB-INF/spring/root-context.xml 에 써있는대로 스프링 객체 컨테이너 생성 -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<!-- WEB-INF/spring/appServlet/servlet-context.xml 에 써있는대로 스프링 객체 컨테이너 생성 -->
+	<!-- (ContextLoaderListener가 생성한 스프링 객체 컨테이너가 있다면 부모 컨테이너로 설정) -->
+	<!-- 스프링 컨테이너에 등록된 객체들을 사용하여 요청을 처리 -->
+	<servlet>
+		<servlet-name>appServlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<!-- 다른 JSP 파일 또는 서블릿과 연결되지 않은 모든 주소(경로)에 대한 요청을 처리하도록 등록 -->	
+	<servlet-mapping>
+		<servlet-name>appServlet</servlet-name>
+		<url-pattern>/</url-pattern>
+		<!-- / <<- default servlet 경로. 미리 약속된 경로 -->
+		<!-- - Web Server
+				Apache, Http, NGINX, IIS....(정적인 웹 서비스)
+		
+			   - Web Application Server
+			   동적인 웹 서비스
+			   https://yozm.wishket.com/magazine/detail/1780/
+			   Servlet Container -> (톰캣), Web App....Server(WAS) -> (톰캣2)   
+			   톰캣은 실행시키는 기능만 있음, *.jsp -> JspServlet (확장자가 JSP인것 실행명령 받으면 JSP로 실행)
+			   									     /  -> DefaultServlet(못찾으면 이거로 실행)
+			   -->
+	</servlet-mapping>
+
+	<filter>
+		 <filter-name>encoding-filter</filter-name>
+		 <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		 <init-param>
+			 <param-name>encoding</param-name>
+			 <param-value>UTF-8</param-value>
+		 </init-param>
+	 </filter>
+	 <filter-mapping>
+		 <filter-name>encoding-filter</filter-name>
+		 <url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+
+</web-app>
